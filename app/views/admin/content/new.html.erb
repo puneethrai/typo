@@ -1,10 +1,29 @@
 <% @page_heading = _('New article') %>
 
 <%= render "admin/shared/edit", { :form_type => "article", :form_action => { :action => "new", :id => @article.id , :class => ('autosave')} } %>
-<h2><%= "Merge Articles" %></h2>
+
+	<%= form_tag({:controller => "admin/content", :action => "merge"}, :method => "put", :class => 'article') do %>
+	  <h2><%= "Merge Articles" %></h2>
+	  <%= label_tag(:merge_with, "Article ID") %>
+	  <%= text_field_tag(:merge_with) %>
+	  <%= submit_tag("Merge") %>
+	<% end %>
+
+<% if false %>
 
 
-The form field containing the ID of the article to merge with must have the HTML attribute name set to merge_with.
-This requirement is present for the sole purpose of allowing the autograder to identify the merge functionality in 
-your deployed application and is not something you would normally do in Rails. 
-There should be exactly one input element with the name merge_with on the edit article page.
+	
+		<%= form_tag('/merge') do %>
+		
+			 <h2><%= "Merge Articles" %></h2>
+			 <%= text_field_tag(:merge_with) %>
+			
+			<%= submit_tag "Merge Articles" %>
+			
+			<%= hidden_field_tag 'id', @article.id %>
+		
+		<% end %>
+	
+
+
+<% end %>

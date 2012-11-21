@@ -2,6 +2,12 @@ require 'base64'
 
 module Admin; end
 class Admin::ContentController < Admin::BaseController
+    def merge
+      @current_article = Article.find(params[:merge_with])
+      #(this variable should grab the article ID from the form) @input_article =
+      @merged_article = @current_article + @input_article
+      return @merged_article  
+    end
   layout "administration", :except => [:show, :autosave]
 
   cache_sweeper :blog_sweeper
@@ -240,4 +246,5 @@ class Admin::ContentController < Admin::BaseController
   def setup_resources
     @resources = Resource.by_created_at
   end
+
 end
