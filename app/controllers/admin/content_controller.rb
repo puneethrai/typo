@@ -46,6 +46,7 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def new
+    @Adminname = current_user
     new_or_edit
   end
 
