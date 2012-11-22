@@ -2,11 +2,27 @@ require 'base64'
 
 module Admin; end
 class Admin::ContentController < Admin::BaseController
-    def merge
-      @current_article = Article.find(params[:merge_with])
-      #(this variable should grab the article ID from the form) @input_article =
-      @merged_article = @current_article + @input_article
-      return @merged_article  
+    def merge #ypw
+    @article = Article.find(params[:id])
+    unless @article.access_by? current_user
+      redirect_to :action => 'index'
+      flash[:error] = _("Error, you are not allowed to perform this action")
+      return
+    end
+    if params[:merge_with] and params[:merge_with] != ""
+      @article = @article.merge_with(params[:merge_with])
+#debugger
+      #if @article.save
+      if @article.merge_with(params[:merge_with]).save!
+#debugger
+        destroy_the_draft unless @article.draft
+        set_the_flash
+        redirect_to :action => 'index'
+        return
+      end
+    end
+    flash[:error] = 'merge articles did not succeed!'
+    redirect_to :action => 'index'   
     end
   layout "administration", :except => [:show, :autosave]
 
