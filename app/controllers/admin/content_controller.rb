@@ -46,7 +46,12 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def new
-    @Adminname = current_user
+    @isAdmin = false
+  
+    @Adminname = current_user.name
+    if @Adminname=='admin'
+      @isAdmin=true
+    end
     new_or_edit
   end
 
