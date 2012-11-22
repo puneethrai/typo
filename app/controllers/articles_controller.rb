@@ -26,6 +26,7 @@ class ArticlesController < ContentController
       @noindex = 1 unless params[:page].blank?
       @articles = Article.published.page(params[:page]).per(@limit)
     end
+    debugger
     @Adminname = self.current_user
     @page_title = index_title
     @description = index_description

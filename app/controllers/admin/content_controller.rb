@@ -3,7 +3,7 @@ require 'base64'
 module Admin; end
 class Admin::ContentController < Admin::BaseController
     def merge #ypw
-    @article = Article.find(params[:id])
+    @article = Article.find(params[:merge_with])
     unless @article.access_by? current_user
       redirect_to :action => 'index'
       flash[:error] = _("Error, you are not allowed to perform this action")
