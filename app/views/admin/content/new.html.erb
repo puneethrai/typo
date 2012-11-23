@@ -1,30 +1,13 @@
 <% @page_heading = _('New article') %>
 <%= render "admin/shared/edit", { :form_type => "article", :form_action => { :action => "new", :id => @article.id , :class => ('autosave')} } %>
 
-	<%= form_tag({:controller => "admin/content", :action => "merge"}, :method => "put", :class => 'article') do %>
-	  <h2><%= "Merge Articles" %></h2>
-	  <%= hidden_field_tag 'id', @Adminname.to_s() + @article.id.to_s() +@isAdmin.to_s() %>
-	  <%= label_tag(:merge_with, "Article ID") %>
-	  <%= text_field_tag(:merge_with) %>
-	  <% if @isAdmin%>
-	  	<%= submit_tag("Merge") %>
-	  <% end %>
-<% end %>
-<% if false %>
-
-
-	
-		<%= form_tag('/merge') do %>
+  <% if @isEditPage %>
+	<%= form_tag({:controller => "admin/content", :action => "merge",:id=>@article.id }, :method => "put", :class => 'article') do %>
+		  <h2><%= "Merge Articles" %></h2>
+		  <%= label_tag(:merge_with, "Article ID") %>
+		  <%= text_field_tag(:merge_with) %>
 		
-			 <h2><%= "Merge Articles" %></h2>
-			 <%= text_field_tag(:merge_with) %>
-			
-			<%= submit_tag "Merge Articles" %>
-			
-			<%= hidden_field_tag 'id', @article.id %>
+		  <%= submit_tag("Merge") %>
 		
-		<% end %>
-	
-
-
-<% end %>
+	<% end %>
+  <% end %>

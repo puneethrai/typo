@@ -3,12 +3,20 @@ require 'base64'
 module Admin; end
 class Admin::ContentController < Admin::BaseController
     def merge #ypw
-    @article = Article.find(params[:merge_with])
+      debugger
+    @article = Article.find(params[:id])
     unless @article.access_by? current_user
       redirect_to :action => 'index'
       flash[:error] = _("Error, you are not allowed to perform this action")
       return
     end
+    @Adminname = current_user.name
+    if @Adminname !='admin'
+      redirect_to :action => 'index'
+      flash[:error] = _("Error, you are not allowed to perform this action")
+      return
+    end
+    debugger
     if params[:merge_with] and params[:merge_with] != ""
       @article = @article.merge_with(params[:merge_with])
 #debugger
@@ -16,7 +24,7 @@ class Admin::ContentController < Admin::BaseController
       if @article.merge_with(params[:merge_with]).save!
 #debugger
         destroy_the_draft unless @article.draft
-        set_the_flash
+        #set_the_flash
         redirect_to :action => 'index'
         return
       end
@@ -34,6 +42,7 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def index
+    
     @search = params[:search] ? params[:search] : {}
     
     @articles = Article.search_with_pagination(@search, {:page => params[:page], :per_page => this_blog.admin_display_elements})
@@ -46,8 +55,9 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def new
+    
+    @isEditPage = false
     @isAdmin = false
-  
     @Adminname = current_user.name
     if @Adminname=='admin'
       @isAdmin=true
@@ -57,6 +67,7 @@ class Admin::ContentController < Admin::BaseController
 
   def edit
     @article = Article.find(params[:id])
+    @isEditPage = true
     unless @article.access_by? current_user
       redirect_to :action => 'index'
       flash[:error] = _("Error, you are not allowed to perform this action")
