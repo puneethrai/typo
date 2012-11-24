@@ -61,6 +61,7 @@ class Article < Content
 
   setting :password,                   :string, ''
   def merge_with(other_article_id)
+    #debugger
     self.comments << Article.find(other_article_id).comments
     self.body_and_extended << Article.find(other_article_id).body_and_extended
     return self   

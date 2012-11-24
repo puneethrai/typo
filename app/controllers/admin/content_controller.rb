@@ -3,28 +3,27 @@ require 'base64'
 module Admin; end
 class Admin::ContentController < Admin::BaseController
     def merge #ypw
-      debugger
-    @article = Article.find(params[:id])
-    unless @article.access_by? current_user
-      redirect_to :action => 'index'
-      flash[:error] = _("Error, you are not allowed to perform this action")
-      return
-    end
     @Adminname = current_user.name
     if @Adminname !='admin'
       redirect_to :action => 'index'
       flash[:error] = _("Error, you are not allowed to perform this action")
       return
     end
-    debugger
-    if params[:merge_with] and params[:merge_with] != ""
+    #debugger
+    if params[:id] and params[:merge_with] != ""
+      @article = Article.find(params[:id])
       @article = @article.merge_with(params[:merge_with])
-#debugger
-      #if @article.save
-      if @article.merge_with(params[:merge_with]).save!
-#debugger
+      
+      @newArticle = Article.get_or_build_article(nil)
+      @newArticle.keywords = Tag.collection_to_string @newArticle.tags
+      @newArticle.attributes = {"published"=>"1", "allow_pings"=>"0", "allow_comments"=>"1", "published_at"=>@article.published_at, "permalink"=>"", "text_filter"=>"markdown smartypants", "post_type"=>"read", "title"=>@article.title, "keywords"=>"", "excerpt"=>""}
+      @newArticle.body_and_extended = @article.body_and_extended
+      @newArticle.published_at = @article.published_at
+      @newArticle.author = @article.author
+      #debugger    
+      if @newArticle.save
         destroy_the_draft unless @article.draft
-        #set_the_flash
+        set_the_flash
         redirect_to :action => 'index'
         return
       end
@@ -55,7 +54,7 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def new
-    
+
     @isEditPage = false
     @isAdmin = false
     @Adminname = current_user.name
@@ -179,6 +178,7 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
+    #debugger
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
@@ -228,6 +228,8 @@ class Admin::ContentController < Admin::BaseController
       flash[:notice] = _('Article was successfully created')
     when 'edit'
       flash[:notice] = _('Article was successfully updated.')
+    when 'merge'
+      flash[:notice] = _('Article was successfully merged.')
     else
       raise "I don't know how to tidy up action: #{params[:action]}"
     end
