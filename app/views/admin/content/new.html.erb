@@ -6,7 +6,7 @@
 		  <h2><%= "Merge Articles" %></h2>
 		  <%= label_tag(:merge_with, "Article ID") %>
 		  <%= text_field_tag(:merge_with) %>
-		<%if isAdmin%>
+		<%if @isAdmin%>
 		  <%= submit_tag("Merge") %>
 		<% end %>
 	<% end %>
