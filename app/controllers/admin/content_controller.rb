@@ -25,6 +25,10 @@ class Admin::ContentController < Admin::BaseController
         destroy_the_draft unless @article.draft
         set_the_flash
         redirect_to :action => 'index'
+        @deleteArticle = Article.find(params[:id])
+        @deleteArticle.destroy
+        @deleteArticle = Article.find(params[:merge_with])
+        @deleteArticle.destroy
         return
       end
     end
