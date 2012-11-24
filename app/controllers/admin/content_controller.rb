@@ -20,6 +20,9 @@ class Admin::ContentController < Admin::BaseController
       @newArticle.body_and_extended = @article.body_and_extended
       @newArticle.published_at = @article.published_at
       @newArticle.author = @article.author
+      @newArticle.comments = @article.comments
+      @newArticle.user = @article.user
+      @newArticle.categories  = @article.categories
       #debugger    
       if @newArticle.save
         destroy_the_draft unless @article.draft
